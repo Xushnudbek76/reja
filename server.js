@@ -1,42 +1,29 @@
-console.log('started');
-const express = require('express');
-const app = express();
-const http = require('http');
-const fs = require('fs');
+const http = require("http");
+const mongodb = require("mongodb");
 
-let user;
-fs.readFile("database/user.json", "utf-8", (err, data) => {
+let db;
+const connectionString =
+  "mongodb+srv://Xushnudbek:6BMc6eiFi4tzZv63@cluster0.s6giato.mongodb.net/REJA=cluster0";
+
+mongodb.connect(
+  connectionString,
+  { useNewUrlParser: true, 
+    useUnifiedTopology: true },
+  (err, client) => {
     if (err) {
-        console.log('ERROR:', err);
+      console.log("ERROR on connection MongoDB");
     } else {
-        user = JSON.parse(data);
+      
+      console.log("MongoDB connection succeed");
+      module.exports = client
+      const app = require("./app");
+      const server = http.createServer(app);
+      let PORT = 3000;
+      server.listen(PORT, function () {
+        console.log(
+          `Server is running seccessfully on port: ${PORT} , http://localhost:${PORT}`
+        );
+      });
     }
-});
-// 1: Kirish code 
-app.use(express.static("public"));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-// 2: Session code
-
-// 3: Views code
-app.set("views","views");
-app.set("view engine", "ejs");
-
-// 4 Routing code
-app.get('/author', (req, res) => {
-    res.render("author", { user: user });
-})
-app.post("/create-item", (req, res) => {
-      console.log(req.body);
-      res.json({test: "success"});
-})
-app.get('/', function(req, res) {
-    res.render("reja");
-});
-
-const server = http.createServer(app);
-const PORT = 3000;
-server.listen(PORT, function () {
-    console.log(`The server is running successfully on port: ${PORT}, http://localhost:${PORT}`);
-});
+  }
+);

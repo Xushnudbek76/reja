@@ -1,12 +1,9 @@
-// Task B
+// C-TASK
 
-const numbers = (string) => {
-    let countOfNumbers = 0;
-    for(let i = 0; i < string.length; i++) {
-     if(!isNaN(string[i])) {
-        countOfNumbers++;
-     };
-    }
-    return countOfNumbers;
+const sameWords = (first, second) => {
+    if(first.length !== second.length) return false;
+    let a = first.split("").sort().join("")
+    let b = second.split("").sort().join("");
+    return a === b;
 }
-console.log('raqamlar soni:', numbers('sanisoa7c8dscsd89csdc'));
+console.log(sameWords('salom', 'lomas'));

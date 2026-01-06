@@ -9,14 +9,7 @@ const mongodb = require("mongodb");
 const db = require("./server").db();
 
 
-// let user;
-// fs.readFile("database/user.json", "utf-8", (err, data) => {
-//     if (err) {
-//         console.log('ERROR:', err);
-//     } else {
-//         user = JSON.parse(data);
-//     }
-// });
+
 // 1: Kirish code 
 app.use(express.static("public"));
 app.use(express.json());
@@ -36,8 +29,29 @@ function (err, data) {
   res.json({state: "success"});
 }
 );
+});
 
-})
+app.post("/edit_item", (req, res) => {
+  const data = req.body;
+  console.log(data);
+  db.collection("plans").findOneAndUpdate (
+    {_id: new mongodb.ObjectId(data.id)},
+    { $set: {reja: data.new_input}},
+    function (err, data) {
+      res.json({ state: "success"});
+    }
+  );
+});
+
+app.post("/delete-all", (req, res) => {
+  if (req.body.delete_all) {
+    db.collection("plans").deleteMany(function () {
+      res.json({ state: "hamma rejalar ochirildi"});
+    })
+  }
+});
+
+
 app.post("/create-item", (req, res) => {
       console.log('user entered /create-item');
       const new_reja = req.body.reja;
